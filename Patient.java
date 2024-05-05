@@ -1,9 +1,8 @@
-package historia_clinica.patient;
-
-import java.lang.reflect.Field;
-
 public class Patient {
-    private String motivoConsulta;
+    private String nombre;
+    private String documento;
+    private String peso;
+    private String altura;   private String motivoConsulta;
     private String historialDeEnfermedades;
     private String examinacionFisica;
     private String examenesComplementarios;
@@ -23,10 +22,7 @@ public class Patient {
     private boolean fumador;
     private boolean diabetico;
     private boolean hipertenso;
-    private String nombre;
-    private String doc;
-    private String peso;
-    private String altura;
+
 
     public Patient() {
     }
@@ -36,11 +32,11 @@ public class Patient {
     public String getNombre() {
         return nombre;
     }
-    public void setDoc(String doc) {
-        this.doc = doc;
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
-    public String getDoc() {
-        return doc;
+    public String getDocumento() {
+        return documento;
     }
     public String getPeso() {
         return peso;
@@ -178,7 +174,7 @@ public class Patient {
     public String toString() {
         StringBuilder output = new StringBuilder();
         output.append("Nombre: ").append(nombre).append("\n");
-        output.append("Documento: ").append(doc).append("\n");
+        output.append("Documento: ").append(documento).append("\n");
         output.append("Peso: ").append(peso).append("\n");
         output.append("Altura: ").append(altura).append("\n");
         output.append("Motivo de Consulta: ").append(motivoConsulta).append("\n");

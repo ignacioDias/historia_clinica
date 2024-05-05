@@ -1,5 +1,3 @@
-package historia_clinica;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -9,21 +7,10 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 
-
-import historia_clinica.MedicalRecord;
-import historia_clinica.patient.Patient;
-
 public class MedicalRecordGUI extends JFrame {
-    private MedicalRecord medicalRecord;
-    private JTextField nameField, docField, weightField, heightField;
-    private JTextArea reasonTextArea, historyTextArea, examinationTextArea, examsTextArea,
-            csvTaField, fcField, tempField, saturO2Field, glasgowField, treatmentField,
-            evolutionField, studiesField, headCircumferenceField, obstetricsLMPField,
-            colesterolField, glucoseField, waistCircumferenceField;
-    private JCheckBox smokerCheckBox, diabeticCheckBox, hypertensiveCheckBox;
+    private static MedicalRecord medicalRecord = new MedicalRecord();
+    private JTextField docField;
     public MedicalRecordGUI() {
-        medicalRecord = new MedicalRecord();
-
         setTitle("Sistema de Gestión de Historias Clínicas");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,10 +56,7 @@ public class MedicalRecordGUI extends JFrame {
         }
     }
     private void createPatient() {
-        // Crear una nueva instancia de Patient
         Patient patient = new Patient();
-
-        // Crear el diálogo para ingresar los datos del paciente
         JDialog dialog = new JDialog(this, "Ingresar Datos del Paciente", true);
         dialog.setSize(1080, 720);
         dialog.setLocationRelativeTo(this);
@@ -81,18 +65,15 @@ public class MedicalRecordGUI extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(0, 2, 10, 10));
 
-        JLabel nameLabel = new JLabel("Nombre completo:");
-        nameField = new JTextField();
-        mainPanel.add(nameLabel);
-        mainPanel.add(nameField);
-
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setMaximumFractionDigits(2);
-        JFormattedTextField weightField = new JFormattedTextField(format);
-        JFormattedTextField heightField = new JFormattedTextField(format);
 
         Field[] fields = Patient.class.getDeclaredFields();
         for (Field field : fields) {
+            if(field.getName().equals("documento")) {
+                patient.setDocumento(docField.getText());
+                continue;
+            }
             JLabel label = new JLabel(field.getName() + ":");
             field.setAccessible(true);
             if (field.getType() == boolean.class) {
@@ -140,10 +121,13 @@ public class MedicalRecordGUI extends JFrame {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Guardar los datos del paciente en un archivo
-                savePatientDataToFile(patient);
-                dialog.dispose();
-                JOptionPane.showMessageDialog(MedicalRecordGUI.this, "Historia clínica creada y guardada exitosamente.");
+                try {
+                    savePatientDataToFile(patient);
+                    dialog.dispose();
+                    JOptionPane.showMessageDialog(MedicalRecordGUI.this, "Historia clínica creada y guardada exitosamente.");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         mainPanel.add(confirmButton);
@@ -154,9 +138,8 @@ public class MedicalRecordGUI extends JFrame {
 
     private void savePatientDataToFile(Patient patient) {
         medicalRecord.saveFile(patient);
+
     }
-
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
