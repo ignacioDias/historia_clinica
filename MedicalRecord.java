@@ -10,12 +10,6 @@ import java.util.HashMap;
 public class MedicalRecord {
     private Map<String, Patient> patients = new HashMap<String, Patient>();
     public MedicalRecord() {
-        Patient paciente = new Patient();
-        paciente.setAltura("1.82");
-        paciente.setNombre("Ignacio Dias Gundin");
-        paciente.setDoc("43606489");
-        paciente.setFumador(false);
-        patients.put("43606489", paciente);
     }
     public void addPatient(Patient patient) {
         patients.put(patient.getDoc(), patient);
