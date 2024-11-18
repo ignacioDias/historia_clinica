@@ -4,12 +4,12 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Field;
 import java.text.NumberFormat;
 
 public class MedicalRecordGUI extends JFrame {
     private static MedicalRecord medicalRecord = new MedicalRecord();
     private JTextField docField;
+
     public MedicalRecordGUI() {
         setTitle("Sistema de Gestión de Historias Clínicas");
         setSize(400, 300);
@@ -25,21 +25,11 @@ public class MedicalRecordGUI extends JFrame {
         mainPanel.add(docField);
 
         JButton searchButton = new JButton("Buscar Historia Clínica");
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                searchPatient();
-            }
-        });
+        searchButton.addActionListener(e -> searchPatient());
         mainPanel.add(searchButton);
 
         JButton createButton = new JButton("Crear Historia Clínica");
-        createButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createPatient();
-            }
-        });
+        createButton.addActionListener(e -> createPatient());
         mainPanel.add(createButton);
 
         add(mainPanel);
@@ -50,13 +40,16 @@ public class MedicalRecordGUI extends JFrame {
         String doc = docField.getText();
         try {
             Patient patient = medicalRecord.getPatient(doc);
-            JOptionPane.showMessageDialog(this, "Historia clínica encontrada:\n" + patient.toString());
+            JOptionPane.showMessageDialog(this, "Historia clínica encontrada:\n" + patient);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(this, "No se encontró la historia clínica para el documento proporcionado.");
         }
     }
+
     private void createPatient() {
         Patient patient = new Patient();
+        patient.documento = docField.getText(); // Establecemos el documento directamente.
+
         JDialog dialog = new JDialog(this, "Ingresar Datos del Paciente", true);
         dialog.setSize(1080, 720);
         dialog.setLocationRelativeTo(this);
@@ -65,87 +58,53 @@ public class MedicalRecordGUI extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(0, 2, 10, 10));
 
-        NumberFormat format = NumberFormat.getNumberInstance();
-        format.setMaximumFractionDigits(2);
+        // Añadir campos del paciente como componentes del formulario.
+        mainPanel.add(new JLabel("Nombre:"));
+        JTextField nombreField = new JTextField();
+        mainPanel.add(nombreField);
 
-        Field[] fields = Patient.class.getDeclaredFields();
-        for (Field field : fields) {
-            if(field.getName().equals("documento")) {
-                patient.setDocumento(docField.getText());
-                continue;
-            }
-            JLabel label = new JLabel(field.getName() + ":");
-            field.setAccessible(true);
-            if (field.getType() == boolean.class) {
-                JCheckBox checkBox = new JCheckBox();
-                mainPanel.add(label);
-                mainPanel.add(checkBox);
-                checkBox.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        try {
-                            field.set(patient, checkBox.isSelected());
-                        } catch (IllegalAccessException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-            } else {
-                JTextField textField = new JTextField();
-                mainPanel.add(label);
-                mainPanel.add(textField);
-                textField.getDocument().addDocumentListener(new DocumentListener() {
-                    @Override
-                    public void insertUpdate(DocumentEvent e) {
-                        updateField();
-                    }
-                    @Override
-                    public void removeUpdate(DocumentEvent e) {
-                        updateField();
-                    }
-                    @Override
-                    public void changedUpdate(DocumentEvent e) {
-                        updateField();
-                    }
-                    private void updateField() {
-                        try {
-                            field.set(patient, textField.getText());
-                        } catch (IllegalAccessException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-            }
-        }
+        mainPanel.add(new JLabel("Peso:"));
+        JTextField pesoField = new JTextField();
+        mainPanel.add(pesoField);
+
+        mainPanel.add(new JLabel("Altura:"));
+        JTextField alturaField = new JTextField();
+        mainPanel.add(alturaField);
+
+        mainPanel.add(new JLabel("Motivo de Consulta:"));
+        JTextField motivoField = new JTextField();
+        mainPanel.add(motivoField);
+
+        mainPanel.add(new JLabel("Fumador:"));
+        JCheckBox fumadorCheckbox = new JCheckBox();
+        mainPanel.add(fumadorCheckbox);
+
+        // Botón de confirmación
         JButton confirmButton = new JButton("Aceptar");
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    savePatientDataToFile(patient);
-                    dialog.dispose();
-                    JOptionPane.showMessageDialog(MedicalRecordGUI.this, "Historia clínica creada y guardada exitosamente.");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
+        confirmButton.addActionListener(e -> {
+            // Asignamos los valores ingresados directamente al objeto paciente.
+            patient.nombre = nombreField.getText();
+            patient.peso = pesoField.getText();
+            patient.altura = alturaField.getText();
+            patient.motivoConsulta = motivoField.getText();
+            patient.fumador = fumadorCheckbox.isSelected();
+
+            // Guardamos los datos del paciente.
+            savePatientDataToFile(patient);
+            dialog.dispose();
+            JOptionPane.showMessageDialog(this, "Historia clínica creada y guardada exitosamente.");
         });
+
         mainPanel.add(confirmButton);
         dialog.add(mainPanel);
         dialog.setVisible(true);
     }
 
-
     private void savePatientDataToFile(Patient patient) {
         medicalRecord.saveFile(patient);
-
     }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MedicalRecordGUI();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new MedicalRecordGUI());
     }
 }
