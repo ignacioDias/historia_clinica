@@ -27,42 +27,42 @@ public class Patient {
     public Patient() {
     }
 
-    @Override
-    public String toString() {
-        StringBuilder output = new StringBuilder();
-        output.append("Nombre: ").append(nombre).append("\n");
-        output.append("Documento: ").append(documento).append("\n");
-        output.append("Peso: ").append(peso).append("\n");
-        output.append("Altura: ").append(altura).append("\n");
-        output.append("Motivo de Consulta: ").append(motivoConsulta).append("\n");
-        output.append("Historial de Enfermedades: ").append(historialDeEnfermedades).append("\n");
-        output.append("Examinación Física: ").append(examinacionFisica).append("\n");
-        output.append("Examenes Complementarios: ").append(examenesComplementarios).append("\n");
-        output.append("CSV_TA: ").append(CSV_TA).append("\n");
-        output.append("FC: ").append(FC).append("\n");
-        output.append("Temp: ").append(Temp).append("\n");
-        output.append("SaturO2: ").append(SaturO2).append("\n");
-        output.append("Glasgow: ").append(Glasgow).append("\n");
-        output.append("Tratamiento: ").append(Tratamiento).append("\n");
-        output.append("Evolucion: ").append(Evolucion).append("\n");
-        output.append("Estudios Solicitados: ").append(estudiosSolicitados).append("\n");
-        output.append("Perimetro Cefálico: ").append(perimCefalico).append("\n");
-        output.append("Obstetricia Fum: ").append(ObstetriciaFum).append("\n");
-        output.append("Colesterol: ").append(colesterol).append("\n");
-        output.append("Glucemia: ").append(glucemia).append("\n");
-        output.append("Circunferencia de Cintura: ").append(circunsferenciaCintura).append("\n");
-        if (fumador)
-            output.append("Fumador: Sí").append("\n");
-        else
-            output.append("Fumador: No").append("\n");
-        if (diabetico)
-            output.append("Diabetico: Sí").append("\n");
-        else
-            output.append("Diabetico: No").append("\n");
-        if (hipertenso)
-            output.append("Hipertenso: Sí").append("\n");
-        else
-            output.append("Hipertenso: No").append("\n");
-        return output.toString();
+@Override
+public String toString() {
+    StringBuilder output = new StringBuilder();
+    output.append("Nombre: ").append(nombre).append("\n")
+          .append("Documento: ").append(documento).append("\n")
+          .append("Peso: ").append(peso).append("\n")
+          .append("Altura: ").append(altura).append("\n")
+          .append("Motivo de Consulta: ").append(motivoConsulta).append("\n")
+          .append("Historial de Enfermedades: ").append(historialDeEnfermedades).append("\n")
+          .append("Examinación Física: ").append(examinacionFisica).append("\n")
+          .append("Exámenes Complementarios: ").append(examenesComplementarios).append("\n")
+          .append("CSV_TA: ").append(CSV_TA).append("\n")
+          .append("FC: ").append(FC).append("\n")
+          .append("Temperatura: ").append(Temp).append("\n")
+          .append("Saturación de O2: ").append(SaturO2).append("\n")
+          .append("Glasgow: ").append(Glasgow).append("\n")
+          .append("Tratamiento: ").append(Tratamiento).append("\n")
+          .append("Evolución: ").append(Evolucion).append("\n")
+          .append("Estudios Solicitados: ").append(estudiosSolicitados).append("\n")
+          .append("Perímetro Cefálico: ").append(perimCefalico).append("\n")
+          .append("Obstetricia FUM: ").append(ObstetriciaFum).append("\n")
+          .append("Colesterol: ").append(colesterol).append("\n")
+          .append("Glucemia: ").append(glucemia).append("\n")
+          .append("Circunferencia de Cintura: ").append(circunsferenciaCintura).append("\n");
+
+    String[] booleanAttributes = {
+        "Fumador: " + (fumador ? "Sí" : "No"),
+        "Diabético: " + (diabetico ? "Sí" : "No"),
+        "Hipertenso: " + (hipertenso ? "Sí" : "No")
+    };
+
+    for (String attr : booleanAttributes) {
+        output.append(attr).append("\n");
     }
+
+    return output.toString();
+}
+
 }
